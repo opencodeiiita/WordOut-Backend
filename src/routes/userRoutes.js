@@ -3,7 +3,7 @@ const userModel = require('../models/UserModel'); // Adjust path as needed
 const router = express.Router();
 
 // Route 1: Mark Player as Online
-router.post('/mark-online/:userId', async (req, res) => {
+router.post('/mark-online/:userId', async (req, res) => {{
   try {
     const user = await userModel.findByIdAndUpdate(req.params.userId, { last_online: null }, { new: true });
     if (!user) {
@@ -12,7 +12,7 @@ router.post('/mark-online/:userId', async (req, res) => {
     res.status(200).json({ message: 'User marked as online', user });
   } catch (error) {
     res.status(500).json({ message: 'Error marking user as online', error });
-  }
+  }}
 });
 
 // Route 2: Mark Player as Offline
