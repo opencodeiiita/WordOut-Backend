@@ -1,23 +1,18 @@
-require('dotenv').config();  // Load environment variables
+require('dotenv').config(); // Load environment variables
 
 const mongoose = require('mongoose');
 
+const connectionURL = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/wordout-backend';
 
-if (!process.env.MONGO_URI) {
-  console.error("MONGO_URI is not defined in environment variables");
-  process.exit(1);  
-}
-
-
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(connectionURL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-  .then(function() {
-    console.log("connected to mongo db");
+  .then(() => {
+    console.log('Connected to MongoDB');
   })
-  .catch(function(err) {
-    console.error("Error connecting to MongoDB:", err);
+  .catch(err => {
+    console.error('Error connecting to MongoDB:', err);
   });
 
 module.exports = mongoose.connection;
