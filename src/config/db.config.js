@@ -4,10 +4,7 @@ const mongoose = require('mongoose');
 
 const connectionURL = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/wordout-backend';
 
-mongoose.connect(connectionURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(connectionURL)
   .then(() => {
     console.log('Connected to MongoDB');
   })
