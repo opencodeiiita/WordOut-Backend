@@ -10,6 +10,9 @@
   "description": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "dotenv": "^16.4.7",
+    "moongoose": "^0.0.5"
+
   }
 }
