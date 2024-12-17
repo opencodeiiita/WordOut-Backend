@@ -200,4 +200,39 @@ router.get('/blocked-users/:userId', async (req, res) => {
     }
 });
 
+router.get('/profile/:userId', async (req, res) => {
+    try {
+        const user = await userModel.findById(req.params.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ message: 'Profile fetched successfully', profile: user });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching profile', error });
+    }
+});
+
+router.put('/profile/:userId', async (req, res) => {
+    try {
+        const { name, email, bio } = req.body;
+
+        if (!name || !email) {
+            return res.status(400).json({ message: 'Name and email are required' });
+        }
+        const updatedUser = await userModel.findByIdAndUpdate(
+            req.params.userId,
+            { name, email, bio },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'Profile updated successfully', profile: updatedUser });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating profile', error });
+    }
+});
+
 module.exports = router;
