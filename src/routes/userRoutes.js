@@ -2,7 +2,7 @@ const express = require('express');
 const userModel = require('../models/UserModel');
 const FriendRequestModel = require('../models/FriendRequestModel');
 const router = express.Router();
-
+// const { blockUser, unblockUser, getBlockedUsers } = require('../controllers/blockController');
 // Existing Friend Request Routes
 
 // Route 1: Send a Friend Request
@@ -129,6 +129,74 @@ router.get('/last-online/:userId', async (req, res) => {
         res.status(200).json({ message: 'Last online time', last_online: formattedDate });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching last online', error });
+    }
+});
+
+
+// New Routes for blocking/unblocking and retrieve the users in blocked list
+
+// Route 1: Block a User
+router.post('/block', async (req, res) => {
+    try {
+        const { userId, blockedUserId } = req.body;
+
+        if (userId === blockedUserId) {
+            return res.status(400).json({ message: "You can't block yourself!" });
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (user.blockedUsers.includes(blockedUserId)) {
+            return res.status(400).json({ message: 'User is already blocked!' });
+        }
+
+        user.blockedUsers.push(blockedUserId);
+        await user.save();
+
+        res.status(200).json({ message: `User ${blockedUserId} blocked successfully!`, blockedUsers: user.blockedUsers });
+    } catch (error) {
+        res.status(500).json({ message: 'Error blocking user', error });
+    }
+});
+
+// Route 2: Unblock a User
+router.post('/unblock', async (req, res) => {
+    try {
+        const { userId, blockedUserId } = req.body;
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (!user.blockedUsers.includes(blockedUserId)) {
+            return res.status(400).json({ message: 'User is not in your blocked list!' });
+        }
+
+        user.blockedUsers = user.blockedUsers.filter((id) => id.toString() !== blockedUserId);
+        await user.save();
+
+        res.status(200).json({ message: `User ${blockedUserId} unblocked successfully!`, blockedUsers: user.blockedUsers });
+    } catch (error) {
+        res.status(500).json({ message: 'Error unblocking user', error });
+    }
+});
+
+// Route 3: Get All Blocked Users for a User
+router.get('/blocked-users/:userId', async (req, res) => {
+    try {
+        const user = await userModel.findById(req.params.userId).populate('blockedUsers', 'name email');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'Blocked users fetched successfully', blockedUsers: user.blockedUsers });
+    } catch (error) {
+        console.error('Error fetching blocked users:', error); // Log the full error
+        res.status(500).json({ message: 'Error fetching blocked users', error: error.message });
     }
 });
 
