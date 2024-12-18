@@ -5,6 +5,7 @@ const router = express.Router();
 // const { blockUser, unblockUser, getBlockedUsers } = require('../controllers/blockController');
 // Existing Friend Request Routes
 
+
 // Route 1: Send a Friend Request
 router.post('/friend-request/:receiverId', async (req, res) => {
     try {
