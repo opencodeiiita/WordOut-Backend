@@ -12,6 +12,8 @@ const userSchema = mongoose.Schema({
     // Field for blocking users
     blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }], // Stores IDs of blocked users
     bio: { type: String, trim: true, default: '' }, 
+    //Field for wordScore
+    wordScore: { type: Number, default: 0, min: 0 }
 });
 
 const userModel = mongoose.model('user', userSchema);
