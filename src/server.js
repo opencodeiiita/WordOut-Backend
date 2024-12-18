@@ -3,6 +3,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const userRoutes = require('./routes/userRoutes');
 const authRouter = require('./routes/signup');
+const wordScoreRoutes = require("./routes/wordScore.routes");
 require('./config/db.config');
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/users', userRoutes);
+app.use("/api/wordScore", wordScoreRoutes);
 app.use('/api', authRouter);
 
 app.get('/', (req, res) => {
