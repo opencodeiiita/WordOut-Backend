@@ -4,6 +4,8 @@ const { Server } = require('socket.io');
 const userRoutes = require('./routes/userRoutes');
 const authRouter = require('./routes/signup');
 require('./config/db.config');
+const friendRoutes = require('./routes/friendRoutes'); // Adjust path as necessary
+
 
 const app = express();
 const server = http.createServer(app);
@@ -14,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/users', userRoutes);
 app.use('/api', authRouter);
+app.use('/api/friends', friendRoutes);
 
 app.get('/', (req, res) => {
     res.send("Welcome to WordOut Backend");
