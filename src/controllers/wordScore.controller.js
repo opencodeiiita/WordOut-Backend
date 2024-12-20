@@ -8,7 +8,7 @@ const getWordScore = async (req, res) => {
 
         res.status(200).json({ wordScore: user.wordScore });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error });
+        res.status(500).json({ message: "Error while getting word score", error });
     }
 };
 
@@ -29,7 +29,7 @@ const increaseWordScore = async (req, res) => {
 
         res.status(200).json({ message: "WordScore increased", wordScore: user.wordScore });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error });
+        res.status(500).json({ message: "Error while increasing word score", error });
     }
 };
 
@@ -50,7 +50,7 @@ const decreaseWordScore = async (req, res) => {
 
         res.status(200).json({ message: "WordScore decreased", wordScore: user.wordScore });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error });
+        res.status(500).json({ message: "Error while decreasing word score", error });
     }
 };
 
