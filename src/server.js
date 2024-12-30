@@ -45,7 +45,7 @@ function getPlayerRoomId(socketId) {
 }
 
 function isRoomFull(roomId) {
-    return getPlayerCount(roomId) > 6;
+    return getPlayerCount(roomId) >= 6;
 }
 
 function assignImpostor(roomId) {
