@@ -45,8 +45,20 @@ function getPlayerRoomId(socketId) {
 }
 
 function isRoomFull(roomId) {
-    return getPlayerCount(roomId) > 6;
+    return getPlayerCount(roomId) >= 6;
 }
+
+function assignImpostor(roomId) {
+    if (!isRoomFull(roomId)) {
+        return false;
+    }
+
+    const impostorIndex = Math.floor(Math.random() * gameRooms[roomId].length);
+    const impostor = gameRooms[roomId][impostorIndex];
+    
+    io.to(impostor.socketId).emit('role-assigned', { role:"impostor", message: "You are the impostor!" });
+    return impostor;
+} 
 
 io.on('connection', (socket) => {
     console.log('New player connected: ' + socket.id);
@@ -77,6 +89,16 @@ io.on('connection', (socket) => {
         socket.emit('player-join-response', {status: "Success", roomId});
 
         io.to(roomId).emit('updatePlayersList', gameRooms[roomId]);
+
+        // If the room is full, assign the impostor
+        if (isRoomFull(roomId)) {
+            const impostor = assignImpostor(roomId);
+            if(impostor == false){
+                console.error(`Failed to assign impostor for room '${roomId}'`);
+            } else {
+                console.log(`Impostor for room '${roomId}' is '${impostor.playerName}' (${impostor.socketId})`);
+            }
+        }
     });
 
     // Event triggered when a player leaves the room
@@ -120,7 +142,7 @@ io.on('connection', (socket) => {
 
 
 io.on('connection', (socket) => {
-    console.log(`User connected: ${socket.id}`);
+    console.log(`User connected: '${socket.id}'`);
 
     socket.on('user-online', (userId) => {
         onlineUsers.set(userId, socket.id);
